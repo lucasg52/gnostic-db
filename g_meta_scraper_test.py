@@ -1,4 +1,4 @@
-from .g_meta_scraper import scrape_metadata 
+from .meta_scraper import scrape 
 
 
 html_doc = """<html><head><title>The Dormouse's story</title></head>
@@ -20,10 +20,10 @@ and they lived at the bottom of a well.</p>
 <p class="story">...</p>
 """
 
-mdata = scrape_metadata(html_doc)
+mdata = scrape(html_doc)
 
 # debugging
-print(mdata.g_title)
-print(mdata.g_author)
-print(mdata.g_keywords)
-print(mdata.g_date_access)
+print(mdata.title)
+print(mdata.author)
+print(mdata.keywords)
+print(mdata.date_access)
