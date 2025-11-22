@@ -1,0 +1,7 @@
+.aider*
+.gitignore
+.env
+venv
+venv/
+__pycache__
+.idea
