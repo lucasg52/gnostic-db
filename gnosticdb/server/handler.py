@@ -51,7 +51,10 @@ class PostHandler:
         """, (
             metascraper.date_access,
             self.url,
-            metascraper.mlkw_json() if self.bool_use_ml else "[]",
+            (
+                metascraper.mlkw_json() if self.bool_use_ml
+                else json.dumps({"ml_keywords" : "[]"})
+                ),
             metascraper.metadata_json(),
             metascraper.body_json()
         ))
