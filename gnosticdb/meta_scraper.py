@@ -30,16 +30,6 @@ class MetaScraper:
             self.author.append("None") #default author
 
 
-        # keywords
-        self.keywords = []
-
-        self.keywords_metas = soup.find_all("meta", attrs={"name": "keywords"})
-        for meta in self.keywords_metas:
-            self.keywords.append(meta.get("content"))
-        if len(self.keywords) == 0:
-            self.keywords.append("None") #default author
-
-
         # access date
         self.date_access = datetime.datetime.now()
 
@@ -145,6 +135,4 @@ class MetaScraper:
         # res = cur.execute("SELECT name FROM sqlite_master")
         # res = cur.execute("SELECT date FROM sites")
         # print(res.fetchall())
-
-
 
