@@ -14,6 +14,9 @@ class MetaScraper:
 
         # enforce UTF-8 encoding some time before this
 
+        bool_use_ml = False
+        url_from_front = "placeholder"
+
         # testing
         # self.meta = soup.meta['name']    attribute stuff
 
@@ -64,8 +67,7 @@ class MetaScraper:
         self.date_access = datetime.datetime.now()
 
         # paragraphs & headers
-        self.headers = [h.get_text(strip=True) for h in soup.find_all(['h1','h2','h3','h4','h5','h6'])]
-        self.paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+        self.paragraphs = [p.get_text(strip=True) for p in soup.find_all(['p','h1','h2','h3','h4','h5','h6'])]
 
 
 
@@ -80,8 +82,7 @@ class MetaScraper:
         metadata_json = json.dumps(combined)
 
         combined = {
-            "paragraphs": self.paragraphs,
-            "headers": self.headers
+            "paragraphs": self.paragraphs
         }
         body_json = json.dumps(combined)
         
@@ -93,8 +94,10 @@ class MetaScraper:
 
         send_paras = " ".join(self.paragraphs)
 
-        open('ml_key.json', 'w')
-        ml_keywords = extract_keywords_to_json(self.title, send_paras,output_file = 'ml_key.json')
+        ml_keywords = "None"
+        if (bool_use_ml):
+            open('ml_key.json', 'w')
+            ml_keywords = extract_keywords_to_json(self.title, send_paras,output_file = 'ml_key.json')
         
         combined = {
             "ml_keywords": ml_keywords
