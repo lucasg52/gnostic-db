@@ -1,4 +1,4 @@
-from ..meta_scarper import meta_scraper
+from ..meta_scraper import meta_scraper
 
 def handle(fp):
     return PostHandler(fp)
