@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from flask_cors import CORS
 from .handler import PostHandler
 from .db_send import format_to_json
@@ -35,10 +35,11 @@ def process_get():
             "status": "error",
             "message": "failure" + str(e)
         }
-    return {
-            "status" : "success",
-            "message" : fulldb_json
-        }
+    return Response(fulldb_json, mimetype='application/json')
+    # return {
+    #         "status" : "success",
+    #         # "message" : fulldb_json
+    #     }
 
 @app.route('/<timestamp>', methods=['GET'])
 def process_get_ts(timestamp):
