@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from .handler import PostHandler
+from .db_send import format_to_json
 
 
 app = Flask('gnosticserver')
@@ -27,9 +28,21 @@ def process_post():
 
 @app.route('/', methods=['GET'])
 def process_get():
-    pass
-    # jsonify_wholedb()
+    try:
+        fulldb_json = format_to_json()
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": "failure" + str(e)
+        }
+    return {
+            "status" : "success",
+            "message" : fulldb_json
+        }
 
 @app.route('/<timestamp>', methods=['GET'])
 def process_get_ts(timestamp):
-    pass
+    return {
+        "status": "error",
+        "message": "not implemented"
+    }

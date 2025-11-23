@@ -32,7 +32,5 @@ def format_to_json():
     # json string
     json_str = json.dumps(result, indent=4)
 
-    print(json_str)
-    # SEND to frontend instead of print
+    return json_str
 
-format_to_json()
