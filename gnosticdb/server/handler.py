@@ -1,5 +1,6 @@
 import os
 import datetime
+import time
 import json
 import sqlite3
 from bs4 import BeautifulSoup
@@ -81,7 +82,6 @@ class MetaScraper:
 
 
         # access date
-        self.date_access = datetime.datetime.now()
 
 
         # testing
@@ -111,7 +111,7 @@ class MetaScraper:
 
 
         # access date
-        self.date_access = datetime.datetime.now()
+        self.date_access = str(int(time.time()*1000))
 
         # paragraphs & headers
         self.paragraphs = [p.get_text(strip=True) for p in soup.find_all(['p','h1','h2','h3','h4','h5','h6'])]
