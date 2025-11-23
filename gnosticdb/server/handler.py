@@ -1,9 +1,16 @@
-from bs4 import BeautifulSoup
 import datetime
 import json
 import sqlite3
+from bs4 import BeautifulSoup
 from keyword_extractor.extract_keywords_to_json import extract_keywords_to_json
 
+def handle(fp):
+    return PostHandler(fp)
+
+class PostHandler:
+    def __init__(self, fp):
+        self.metadata = scrape(fp)
+        #self.body = 
 
 def scrape(htmlstream):
     return MetaScraper(htmlstream)
