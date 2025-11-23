@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import datetime
+import json
+import sqlite3
 
 def scrape(htmlstream):
     return MetaScraper(htmlstream)
@@ -70,11 +72,64 @@ class MetaScraper:
         self.date_access = datetime.datetime.now()
 
         # paragraphs & headers
-        headers = [h.get_text(strip=True) for h in soup.find_all(['h1','h2','h3','h4','h5','h6'])]
-        paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+        self.headers = [h.get_text(strip=True) for h in soup.find_all(['h1','h2','h3','h4','h5','h6'])]
+        self.paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+
+
+
+        # jsonify data
+            # title, authors, keywords
+            # para, headers
+        combined = {
+            "title": self.title,
+            "author": self.author,
+            "htmlkeywords": self.keywords
+        }
+        metadata_json = json.dumps(combined)
+
+        combined = {
+            "paragraphs": self.paragraphs,
+            "headers": self.headers
+        }
+        body_json = json.dumps(combined)
+        
+
+
+        # ADD SEPARATELY
+            # llm keywords
+            # url
+
+
+        #sqlite insert
+        con = sqlite3.connect("data.db")
+        cur = con.cursor()
+
+        #init table
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS sites(
+            date TEXT,
+            metadata TEXT,
+            body TEXT
+        )
+        """)
+
+
+        # make these proper data types
+        cur.execute("""
+            INSERT INTO sites (date, metadata, body)
+            VALUES (?, ?, ?)
+        """, (
+            self.date_access,
+            metadata_json,
+            body_json
+        ))
+
+        con.commit()
 
         # debugging
-        # print("HEADERS:", headers)
-        # print("PARAGRAPHS:", paragraphs)
+        # res = cur.execute("SELECT name FROM sqlite_master")
+        # res = cur.execute("SELECT date FROM sites")
+        # print(res.fetchall())
+
 
 
