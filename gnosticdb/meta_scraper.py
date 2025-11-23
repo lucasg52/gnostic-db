@@ -8,6 +8,7 @@ class MetaScraper:
     def __init__(self,htmlstream):
         soup = BeautifulSoup(htmlstream, 'html.parser')
 
+        # enforce UTF-8 encoding some time before this
 
         # testing
         # self.meta = soup.meta['name']    attribute stuff
@@ -67,5 +68,13 @@ class MetaScraper:
 
         # access date
         self.date_access = datetime.datetime.now()
+
+        # paragraphs & headers
+        headers = [h.get_text(strip=True) for h in soup.find_all(['h1','h2','h3','h4','h5','h6'])]
+        paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+
+        # debugging
+        # print("HEADERS:", headers)
+        # print("PARAGRAPHS:", paragraphs)
 
 
