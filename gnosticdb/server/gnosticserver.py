@@ -1,16 +1,21 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from flask import Flask, request
+from flask_cors import CORS
 from .handler import PostHandler
 
-class GnosticRequestHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        try:
-            handler = PostHandler(self.rfile)
-        except Exception as e:
-            self.send_response_only(500, str(e))
-        else:
-            self.send_response_only(200, "Success")
+app = Flask('gnosticserver')
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
-        print(handler.metadata)
-
-
+@app.route('/', methods=['POST'])
+def process_post():
+    try:
+        ph = PostHandler(request.stream)
+        return {
+            "status": "success"
+        }
+    except UnicodeDecodeError as e:
+        print("Could not decode raw data as UTF-8.")
+        return {
+            "status": "error",
+            "message": "failure" + str(e)
+        }
 
