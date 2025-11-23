@@ -8,14 +8,13 @@ cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 @app.route('/', methods=['POST'])
 def process_post():
-    header = request.headers.copy()
+    headers = request.headers
     try:
-        url = header['url']
-        header.pop(url)
+        url = headers['url']
     except KeyError as e:
         url = 'undefined'
     try:
-        ph = PostHandler(request.stream)
+        ph = PostHandler(request.stream, url, headers)
         return {
             "status": "success"
         }
