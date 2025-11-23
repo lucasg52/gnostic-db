@@ -108,6 +108,8 @@ class MetaScraper:
         cur.execute("""
         CREATE TABLE IF NOT EXISTS sites(
             date TEXT,
+            url TEXT,
+            keywords TEXT,
             metadata TEXT,
             body TEXT
         )
@@ -116,10 +118,12 @@ class MetaScraper:
 
         # make these proper data types
         cur.execute("""
-            INSERT INTO sites (date, metadata, body)
-            VALUES (?, ?, ?)
+            INSERT INTO sites (date, url, keywords, metadata, body)
+            VALUES (?, ?, ?, ?, ?)
         """, (
             self.date_access,
+            "PLACEHOLDER URL",
+            "PLACEHOLDER KEYWORDS",
             metadata_json,
             body_json
         ))
