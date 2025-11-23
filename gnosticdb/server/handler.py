@@ -6,62 +6,6 @@ import sqlite3
 from bs4 import BeautifulSoup
 from keyword_extractor.extract_keywords_to_json import extract_keywords_to_json
 
-def handle(fp):
-    ph = PostHandler(fp)
-    return ph
-
-class PostHandler:
-    def __init__(self, htmlstream, url = "unknown", header = None):
-        self.htmlstream = htmlstream
-        self.url = url
-        self.bool_use_ml = False
-        self.url_from_front = "placeholder"
-
-        self.metascraper = self.scrape(htmlstream)
-        self.sqlite_insert()
-
-    def scrape(self, htmlstream):
-        return MetaScraper(htmlstream)
-    
-    def sqlite_insert(self, dbpath = "data.db", metascraper = None):
-        #sqlite insert
-        if metascraper is None:
-            metascraper = self.metascraper
-        con = sqlite3.connect(dbpath)
-        cur = con.cursor()
-
-        #init table
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS sites(
-            date TEXT,
-            url TEXT,
-            keywords TEXT,
-            metadata TEXT,
-            body TEXT
-        )
-        """)
-
-        assert("data.db" in os.listdir())
-
-
-        # make these proper data types
-        cur.execute("""
-            INSERT INTO sites (date, url, keywords, metadata, body)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            metascraper.date_access,
-            self.url,
-            (
-                metascraper.mlkw_json() if self.bool_use_ml
-                else json.dumps({"ml_keywords" : "[]"})
-                ),
-            metascraper.metadata_json(),
-            metascraper.body_json()
-        ))
-
-        con.commit()
-
-
 class MetaScraper:
     def __init__(self,htmlstream):
         soup = BeautifulSoup(htmlstream, 'html.parser')
@@ -148,6 +92,7 @@ class MetaScraper:
         send_paras = " ".join(self.paragraphs)
 
         ml_keywords = "None"
+        open('ml_key.json','w')
         ml_keywords = extract_keywords_to_json(self.title, send_paras,output_file = 'ml_key.json')
         
         combined = {
@@ -159,4 +104,61 @@ class MetaScraper:
         # res = cur.execute("SELECT name FROM sqlite_master")
         # res = cur.execute("SELECT date FROM sites")
         # print(res.fetchall())
+
+
+def handle(fp):
+    ph = PostHandler(fp)
+    return ph
+
+class PostHandler:
+    def __init__(self, htmlstream, url = "unknown", header = None):
+        self.htmlstream = htmlstream
+        self.url = url
+        self.bool_useml = bool("True" == header.get('useML'))
+        self.url_from_front = "placeholder"
+
+        self.metascraper = self.scrape(htmlstream)
+        self.sqlite_insert()
+
+    def scrape(self, htmlstream):
+        return MetaScraper(htmlstream)
+    
+    def sqlite_insert(self, dbpath = "data.db", metascraper = None):
+        #sqlite insert
+        if metascraper is None:
+            metascraper = self.metascraper
+        con = sqlite3.connect(dbpath)
+        cur = con.cursor()
+
+        #init table
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS sites(
+            date TEXT,
+            url TEXT,
+            keywords TEXT,
+            metadata TEXT,
+            body TEXT
+        )
+        """)
+
+        assert("data.db" in os.listdir())
+
+
+        # make these proper data types
+        cur.execute("""
+            INSERT INTO sites (date, url, keywords, metadata, body)
+            VALUES (?, ?, ?, ?, ?)
+        """, (
+            metascraper.date_access,
+            self.url,
+            (
+                metascraper.mklw_json() if self.bool_useml
+                else json.dumps({"ml_keywords" : "[]"})
+                ),
+            metascraper.metadata_json(),
+            metascraper.body_json()
+        ))
+
+        con.commit()
+
 
