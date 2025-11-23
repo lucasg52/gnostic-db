@@ -1,5 +1,5 @@
 import unittest
-from gnosticdb.meta_scraper import scrape
+from gnosticdb.server.handler import scrape
 
 class MetaScraperTest(unittest.TestCase):
     def test_basic(self):
@@ -10,9 +10,9 @@ class MetaScraperTest(unittest.TestCase):
         <meta name="author" content="secondAuthor">
         <meta name="keywords" content="HTML, CSS, JavaScript">
 
-
+        <h1> asjlsjflkjslkfj </h1>
         <p class="title"><b>The Dormouse's story</b></p>
-
+        <h1> asjlsjflkjslkfj </h1>
         <p class="story">Once upon a time there were three little sisters; and their names were
         <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
         <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and

@@ -1,0 +1,6 @@
+[submodule "gnostic-extension"]
+	path = gnostic-extension
+	url = https://github.com/Austin-Tsai/gnostic-extension
+[submodule "gnostic-website"]
+	path = gnostic-website
+	url = https://github.com/Austin-Tsai/gnostic-website
