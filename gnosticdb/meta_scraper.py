@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import datetime
 import json
 import sqlite3
+from keyword_extractor.extract_keywords_to_json import extract_keywords_to_json
+
 
 def scrape(htmlstream):
     return MetaScraper(htmlstream)
@@ -97,8 +99,17 @@ class MetaScraper:
 
         # ADD SEPARATELY
             # llm keywords
-            # url
+            # url  
 
+        send_paras = " ".join(self.paragraphs)
+
+        open('ml_key.json', 'w')
+        ml_keywords = extract_keywords_to_json(self.title, send_paras,output_file = 'ml_key.json')
+        
+        combined = {
+            "ml_keywords": ml_keywords
+        }
+        mlkw_json = json.dumps(combined)
 
         #sqlite insert
         con = sqlite3.connect("data.db")
@@ -123,7 +134,7 @@ class MetaScraper:
         """, (
             self.date_access,
             "PLACEHOLDER URL",
-            "PLACEHOLDER KEYWORDS",
+            mlkw_json,
             metadata_json,
             body_json
         ))
