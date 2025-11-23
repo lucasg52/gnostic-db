@@ -1,5 +1,5 @@
 import unittest
-from gnosticdb.meta_scraper import scrape
+from gnosticdb.server.handler import scrape
 
 class MetaScraperTest(unittest.TestCase):
     def test_basic(self):
